@@ -18,9 +18,10 @@ BaseModel is just an ordinary Java parent class. JPA doesn't automatically say:
 So @MappedSuperclass tells JPA:
 "This class is a template for persistent fields that its entity subclasses inherit."
  */
-@EntityListeners(AuditingEntityListener.class)
+
 @Setter
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

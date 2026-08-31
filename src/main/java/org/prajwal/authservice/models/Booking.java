@@ -11,7 +11,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class Booking extends BaseModel {
 
     @ManyToOne

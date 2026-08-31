@@ -31,7 +31,7 @@ public class Passenger extends BaseModel {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "passenger")
     private List<Booking> bookings = new ArrayList<>();
 
 }
