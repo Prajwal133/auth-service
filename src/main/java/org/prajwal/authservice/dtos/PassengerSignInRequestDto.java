@@ -7,5 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class PassengerSignInRequestDto {
-
+    private String email;
+    private  String password;
 }
