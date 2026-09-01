@@ -1,9 +1,9 @@
 package org.prajwal.authservice.services;
 
-import org.prajwal.authservice.dtos.PassengerSignInRequestDto;
-import org.prajwal.authservice.dtos.PassengerSignInResponseDto;
 import org.prajwal.authservice.dtos.PassengerSignUpRequestDto;
 import org.prajwal.authservice.dtos.PassengerSignUpResponseDto;
+import org.prajwal.authservice.dtos.SignInRequestDto;
+import org.prajwal.authservice.dtos.SignInResponseDto;
 import org.prajwal.authservice.models.Passenger;
 import org.prajwal.authservice.respositories.PassengerRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,7 +34,7 @@ public class AuthService {
         return PassengerSignUpResponseDto.from(savedPassenger);
     }
 
-    public PassengerSignInResponseDto signIn(PassengerSignInRequestDto passengerSignInRequestDto) {
-        return  PassengerSignInResponseDto.builder().build();
+    public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
+        return  SignInResponseDto.builder().build();
     }
 }

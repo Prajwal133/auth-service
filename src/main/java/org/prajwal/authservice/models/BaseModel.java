@@ -22,6 +22,9 @@ So @MappedSuperclass tells JPA:
 @Setter
 @Getter
 @EntityListeners(AuditingEntityListener.class)
+/*
+An entity listener is a class that listens to lifecycle events of a JPA entity and  handle auditing.
+*/
 public abstract class BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

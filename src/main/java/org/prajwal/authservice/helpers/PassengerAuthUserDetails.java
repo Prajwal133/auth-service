@@ -1,31 +1,33 @@
 package org.prajwal.authservice.helpers;
 
-import lombok.AllArgsConstructor;
 import org.prajwal.authservice.models.Passenger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
-// Spring security does authentication on userDetails Objet
-public class AuthPassengerDetails extends Passenger implements UserDetails {
+// Spring security does authentication on userDetails Object
+public class PassengerAuthUserDetails extends Passenger implements UserDetails {
 
-    private String userName;
+    private  String userName;
+
     private String password;
 
-    public AuthPassengerDetails(Passenger passenger){
+    public PassengerAuthUserDetails(Passenger passenger) {
         this.userName = passenger.getEmail();
         this.password = passenger.getPassword();
     }
+
 
     @Override
     public String getUsername() {
         return this.userName;
     }
 
-
-
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -49,7 +51,7 @@ public class AuthPassengerDetails extends Passenger implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
 
