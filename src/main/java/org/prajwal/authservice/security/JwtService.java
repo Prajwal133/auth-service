@@ -1,22 +1,19 @@
-package org.prajwal.authservice.services;
+package org.prajwal.authservice.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.ServletOutputStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
-
+// Responsible for generating the JWT
 @Service
 public class JwtService implements CommandLineRunner {
 
@@ -33,7 +30,6 @@ public class JwtService implements CommandLineRunner {
      * generates new jwt token based on payload/claims
      * @return
      */
-
     public String createToken(String email, Map<String, Object> claims) {
 
         Date now = new Date();
@@ -46,6 +42,10 @@ public class JwtService implements CommandLineRunner {
                 .expiration(expiryDate)
                 .signWith(getSignInKey())
                 .compact();
+    }
+    // for only with email
+    public String createToken(String email) {
+        return createToken(email, new HashMap<>());
     }
 
     private static SecretKey getSignInKey() {
@@ -98,7 +98,7 @@ public class JwtService implements CommandLineRunner {
         claims.put("name", "Prajwal");
         claims.put("role", "Passenger");
         claims.put("phoneNumber", "789456183");
-        String token = createToken("prajwal@gmail.com",claims);
+        String token = createToken("prajwal@gmail.com", claims);
         System.out.println("TOKEN is " + token);
         System.out.println("is Token Expired? " + isTokenExpired(token));
         System.out.println("Email address is " + extractEmail(token));

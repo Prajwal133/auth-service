@@ -1,4 +1,4 @@
-package org.prajwal.authservice.config;
+package org.prajwal.authservice.security;
 
 
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SpringSecurity {
+public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filteringCriteria(HttpSecurity http) throws Exception {

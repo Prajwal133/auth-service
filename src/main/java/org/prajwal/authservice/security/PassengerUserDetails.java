@@ -1,36 +1,41 @@
-package org.prajwal.authservice.helpers;
+package org.prajwal.authservice.security;
 
+import lombok.Getter;
+import lombok.NonNull;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.prajwal.authservice.models.Passenger;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
+//	wraps the passenger as something Spring Security understands
 // Spring security does authentication on userDetails Object
-public class PassengerAuthUserDetails extends Passenger implements UserDetails {
+@Getter
+public class PassengerUserDetails implements UserDetails {
 
-    private  String userName;
+    private final Passenger passenger;   // hold the whole entity, don't extend it
 
-    private String password;
-
-    public PassengerAuthUserDetails(Passenger passenger) {
-        this.userName = passenger.getEmail();
-        this.password = passenger.getPassword();
+    public PassengerUserDetails(Passenger passenger) {
+        this.passenger = passenger;
     }
 
-
     @Override
-    public String getUsername() {
-        return this.userName;
+    public @NonNull String getUsername() {
+        return passenger.getEmail();
     }
 
     @Override
     public String getPassword() {
-        return this.password;
+        return passenger.getPassword();
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority("ROLE_PASSENGER")); // or List.of()
     }
 
     // below set of methods are not of much concern

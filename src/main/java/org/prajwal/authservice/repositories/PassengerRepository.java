@@ -1,4 +1,4 @@
-package org.prajwal.authservice.respositories;
+package org.prajwal.authservice.repositories;
 
 import org.prajwal.authservice.models.Passenger;
 import org.springframework.data.jpa.repository.JpaRepository;
