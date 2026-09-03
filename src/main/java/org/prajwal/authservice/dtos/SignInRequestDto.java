@@ -12,7 +12,7 @@ sign-in should be unified, not split by role,
 because sign-in only ever needs email + password — nothing role-specific.
 A driver and a passenger authenticate with the exact same shape of data.
  */
-public class PassengerSignInRequestDto {
+public class SignInRequestDto {
     private String email;
     private String password;
 }

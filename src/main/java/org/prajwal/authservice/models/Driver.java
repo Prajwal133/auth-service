@@ -20,13 +20,22 @@ public class Driver extends BaseModel {
 
     private String name;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(unique = true, nullable = false)
+    private String password;
+
     @Column(nullable = false, unique = true)
     private String licenseNumber;
+
+    @Column(nullable = false)
+    private String vehicleNumber;
 
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "driver",  fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<Booking> bookings = new ArrayList<>();
 

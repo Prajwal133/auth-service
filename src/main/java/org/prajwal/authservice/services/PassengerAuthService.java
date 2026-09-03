@@ -1,13 +1,13 @@
 package org.prajwal.authservice.services;
 
-import org.prajwal.authservice.dtos.PassengerSignUpRequestDto;
-import org.prajwal.authservice.dtos.PassengerSignUpResponseDto;
-import org.prajwal.authservice.dtos.PassengerSignInRequestDto;
-import org.prajwal.authservice.dtos.PassengerSignInResponseDto;
+import org.prajwal.authservice.dtos.*;
+import org.prajwal.authservice.models.Driver;
 import org.prajwal.authservice.models.Passenger;
+import org.prajwal.authservice.repositories.DriverRepository;
 import org.prajwal.authservice.repositories.PassengerRepository;
 import org.prajwal.authservice.security.JwtService;
 import org.prajwal.authservice.security.PassengerUserDetails;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,23 +18,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class AuthService {
+public class PassengerAuthService {
     private final PassengerRepository passengerRepository;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthService(PassengerRepository passengerRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       AuthenticationManager authenticationManager,
-                       JwtService jwtService) {
+    public PassengerAuthService(PassengerRepository passengerRepository,
+                                BCryptPasswordEncoder bCryptPasswordEncoder,
+                              @Qualifier("passengerAuthenticationManager") AuthenticationManager authenticationManager,
+                                JwtService jwtService) {
         this.passengerRepository = passengerRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }
 
-    public PassengerSignUpResponseDto signUp(PassengerSignUpRequestDto passengerSignUpRequestDto) {
+    public PassengerSignUpResponseDto passengerSignUp(PassengerSignUpRequestDto passengerSignUpRequestDto) {
         Passenger passenger = new Passenger().builder()
                 .name(passengerSignUpRequestDto.getName())
                 .email(passengerSignUpRequestDto.getEmail())
@@ -48,10 +48,11 @@ public class AuthService {
         return PassengerSignUpResponseDto.from(savedPassenger);
     }
 
+
     /*
     orchestrates: builds auth request → calls Spring Security → generates JWT
      */
-    public PassengerSignInResponseDto signIn(PassengerSignInRequestDto passengerSignInRequestDto) {
+    public PassengerSignInResponseDto signIn(SignInRequestDto SignInRequestDto) {
         /*
         You build an unproven claim (UsernamePasswordAuthenticationToken as input) → hand it to authenticationManager,
         which internally uses UserDetailsService + PasswordEncoder to check it
@@ -62,8 +63,8 @@ public class AuthService {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        passengerSignInRequestDto.getEmail(),
-                        passengerSignInRequestDto.getPassword()
+                        SignInRequestDto.getEmail(),
+                        SignInRequestDto.getPassword()
                 )
         );
 

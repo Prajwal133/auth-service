@@ -18,7 +18,10 @@ CREATE TABLE driver
     created_at     datetime(6)           NOT NULL,
     updated_at     datetime(6)           NOT NULL,
     name           VARCHAR(255) NULL,
+    email          VARCHAR(255) NOT NULL,
+    password       VARCHAR(255) NOT NULL,
     license_number VARCHAR(255) NOT NULL,
+    vehicle_number VARCHAR(255) NOT NULL,
     phone_number   VARCHAR(255) NOT NULL,
     CONSTRAINT pk_driver PRIMARY KEY (id)
 );
@@ -49,7 +52,13 @@ CREATE TABLE revinfo
 );
 
 ALTER TABLE driver
+    ADD CONSTRAINT uc_driver_email UNIQUE (email);
+
+ALTER TABLE driver
     ADD CONSTRAINT uc_driver_licensenumber UNIQUE (license_number);
+
+ALTER TABLE driver
+    ADD CONSTRAINT uc_driver_password UNIQUE (password);
 
 ALTER TABLE driver
     ADD CONSTRAINT uc_driver_phonenumber UNIQUE (phone_number);

@@ -1,6 +1,5 @@
 package org.prajwal.authservice.dtos;
 
-import jakarta.persistence.UniqueConstraint;
 import lombok.*;
 
 @Setter
@@ -8,9 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PassengerSignUpRequestDto {
+public class DriverSignUpRequestDto {
     private String name;
     private String email;
-    private  String password;
-    private  String phoneNumber;
+    private String password;
+    private String phoneNumber;
+    private String licenseNumber;
+    private String vehicleNumber;
 }

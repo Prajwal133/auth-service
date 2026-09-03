@@ -1,17 +1,15 @@
 package org.prajwal.authservice.controllers;
 
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.prajwal.authservice.dtos.PassengerSignUpRequestDto;
-import org.prajwal.authservice.dtos.PassengerSignUpResponseDto;
-import org.prajwal.authservice.dtos.PassengerSignInRequestDto;
-import org.prajwal.authservice.dtos.PassengerSignInResponseDto;
-import org.prajwal.authservice.services.AuthService;
+import org.prajwal.authservice.dtos.*;
+import org.prajwal.authservice.services.DriverAuthService;
+import org.prajwal.authservice.services.PassengerAuthService;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,22 +19,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-    private final AuthService authService;
+    private final PassengerAuthService passengerAuthService;
+    private final DriverAuthService driverAuthService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(PassengerAuthService passengerAuthService, DriverAuthService driverAuthService) {
+        this.passengerAuthService = passengerAuthService;
+        this.driverAuthService = driverAuthService;
     }
 
     @PostMapping("/signup/passenger")
-    public ResponseEntity<PassengerSignUpResponseDto> signUp(@RequestBody PassengerSignUpRequestDto passengerSignUpRequestDto) {
-        PassengerSignUpResponseDto passengerSignUpResponseDto = authService.signUp(passengerSignUpRequestDto);
+    public ResponseEntity<PassengerSignUpResponseDto> passengerSignUp(@RequestBody PassengerSignUpRequestDto passengerSignUpRequestDto) {
+        PassengerSignUpResponseDto passengerSignUpResponseDto = passengerAuthService.passengerSignUp(passengerSignUpRequestDto);
         return ResponseEntity.ok(passengerSignUpResponseDto);
     }
 
-    @PostMapping("/signin/passenger")
-    public ResponseEntity<PassengerSignInResponseDto> signIn(@RequestBody PassengerSignInRequestDto passengerSignInRequestDto, HttpServletResponse httpServletResponse) {
+    @PostMapping("/signup/driver")
+    public ResponseEntity<DriverSignUpResponseDto> driverSignUp(@RequestBody DriverSignUpRequestDto driverSignUpRequestDto) {
+        DriverSignUpResponseDto driverSignUpResponseDto = driverAuthService.driverSignUp(driverSignUpRequestDto);
+        return ResponseEntity.ok(driverSignUpResponseDto);
+    }
 
-        PassengerSignInResponseDto passengerSignInResponseDto = authService.signIn(passengerSignInRequestDto);
+    @PostMapping("/signin/passenger")
+    public ResponseEntity<PassengerSignInResponseDto> signIn(@RequestBody SignInRequestDto SignInRequestDto, HttpServletResponse httpServletResponse) {
+
+        PassengerSignInResponseDto passengerSignInResponseDto = passengerAuthService.signIn(SignInRequestDto);
         String token = passengerSignInResponseDto.getToken();
         ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
                 .httpOnly(true)
@@ -75,4 +81,14 @@ public class AuthController {
                 .body(passengerSignInResponseDto);
     }
 
+    @PostMapping("/signin/driver")
+    public ResponseEntity<DriverSignInResponseDto> signIn(@RequestBody SignInRequestDto signInRequestDto
+    ) {
+        DriverSignInResponseDto driverSignInResponseDto = driverAuthService.signIn(signInRequestDto);
+        String token = driverSignInResponseDto.getToken();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, token)
+                .body(driverSignInResponseDto);
+
+    }
 }

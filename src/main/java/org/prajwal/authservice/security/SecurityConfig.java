@@ -1,8 +1,10 @@
 package org.prajwal.authservice.security;
 
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -51,7 +53,7 @@ public class SecurityConfig {
     and return a fully-populated Authentication if valid (or throw an exception if not).
     This is where the actual verification logic lives — e.g., "does this password match the hashed password on file."
      */
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+    public AuthenticationProvider passengerAuthenticationProvider(@Qualifier("passengerUserDetailsService") UserDetailsService userDetailsService) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
         authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
         return authenticationProvider;
@@ -59,13 +61,24 @@ public class SecurityConfig {
 
 
     @Bean
+    @Primary
     /*
     The orchestrator.
     It doesn't do verification itself — it delegates to one or more AuthenticationProviders
      */
-    public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) throws Exception {
+    public AuthenticationManager passengerAuthenticationManager(@Qualifier("passengerAuthenticationProvider") AuthenticationProvider authenticationProvider) throws Exception {
         return new ProviderManager(authenticationProvider);
     }
 
+    @Bean
+    public AuthenticationProvider driverAuthenticationProvider(@Qualifier("driverUserDetailsService") UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+        authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+        return authenticationProvider;
+    }
 
+    @Bean
+    public AuthenticationManager driverAuthenticationManager(@Qualifier("driverAuthenticationProvider") AuthenticationProvider authenticationProvider) throws Exception {
+        return new ProviderManager(authenticationProvider);
+    }
 }
